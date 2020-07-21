@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const Post = require('./Post');
 
 const categorySchema = new Schema({
     name: {
@@ -8,6 +9,23 @@ const categorySchema = new Schema({
         unique : true,
 
     }
+});
+
+
+
+// to prevent referance , 
+// for example when we delete book it will also delete the author that we referancing to the book
+// to prevent this 
+categorySchema.pre('remove',(next)=>{
+    Post.find({category: this.id}, (err, post)=>{
+        if(err){
+            next(err);
+        }else if(post.length > 0){
+            next(new Error("this author post still"));
+        }else{
+            next();
+        }
+    })
 });
 
 

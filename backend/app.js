@@ -4,7 +4,10 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const keys = require('./config/keys');
 
-const adminRouter = require('./routes/admin');
+const catagoryAdmin = require('./routes/category');
+const indexRoute = require('./routes/index');
+const postAdmin = require('./routes/post');
+
 const mongoose = require('mongoose');
 
 
@@ -28,10 +31,10 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 
-app.get('/', (req, res, next)=>{
-    res.send('response');
-});
-app.use('/admin', adminRouter);
+app.use('/', indexRoute);
+app.use('/admin', catagoryAdmin);
+app.use('/admin', postAdmin);
+
 
 
 module.exports = app;

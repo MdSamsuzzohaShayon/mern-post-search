@@ -3,7 +3,6 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const keys = require('./config/keys');
-
 const catagoryAdmin = require('./routes/category');
 const indexRoute = require('./routes/index');
 const postAdmin = require('./routes/post');
@@ -15,7 +14,7 @@ const mongoose = require('mongoose');
 const app = express();
 
 // CONNECTING TO DATABASE
-mongoose.connect(keys.MongoURI);
+mongoose.connect(keys.MongoURI, { useNewUrlParser: true,  useUnifiedTopology: true });
 const db = mongoose.connection;
 db.once('open', ()=>{
     console.log("Mongo db is been connected");
@@ -31,9 +30,9 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 
-app.use('/', indexRoute);
-app.use('/admin', catagoryAdmin);
-app.use('/admin', postAdmin);
+// app.use('/', indexRoute);
+app.use('/admin/category', catagoryAdmin);
+app.use('/admin/post', postAdmin);
 
 
 

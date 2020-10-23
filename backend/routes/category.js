@@ -3,45 +3,57 @@ const router = express.Router();
 const Category = require('../models/Category');
 const { get } = require('mongoose');
 
-/* GET ADMIN home page. */
-// MAKING REQUEST FOR LISTING ALL POST CATEGORY
-router.get('/category', (req, res, next) => {
-  Category.find()
-    .select('name _id')
-    .exec()
-    .then(docs => {
-      console.log(docs);
-      res.status(200).json({
-        message: "showing all category",
-        category: docs.map(doc => {
-          return {
-            name: doc.name,
-            id: doc._id,
-            request: {
-              type: 'Get',
-              url: 'http://localhost:4000/admin/category/' + doc._id
-            }
-          }
-        })
-      }
-      );
-    })
-    .catch(
-      err => {
-        console.log(`Error to show category: ${err}`);
-      }
-    )
-  // res.status(200).json(post_list);
+
+
+
+
+// GETTING SINGLE CATEGORY
+router.get('/', async (req, res, next) => {
+  console.log("working");
+  let allCategory = await Category.find();
+  try {
+    res.status(200).json({
+      category: allCategory.map(c=>{
+        return {
+          id: c._id,
+          name: c.name
+        }
+      })
+    });
+  } catch (error) {
+    console.log(error);
+  }
 });
 
-
-
+// router.get('/', async (req, res, next) => {
+//   console.log("get req for post");
+//   let post = Post.find();
+//   try {
+//       let allPost = await post.select("title description category tags").populate('name').exec();
+//       console.log(allPost);
+//       res.status(200).json({
+//           message: "getting all posts",
+//           posts: allPost.map(p => {
+//               return {
+//                   post: p.title,
+//                   category: p.category
+//               }
+//           }),
+//           request: {
+//               type: "GET",
+//               url: "localhost:4000/admin/post"
+//           }
+//       });
+//   } catch (error) {
+//       console.log(error);
+//   }
+// });
 
 
 
 
 // MAKING POST CATEGORY
-router.post('/category', (req, res, next) => {
+router.post('/', (req, res, next) => {
   // GETTING SUGGETIONS
   // https://github.com/MdSamsuzzohaShayon/nodejs-rest-api/blob/upload_file/api/routes/products.js
   // https://github.com/MdSamsuzzohaShayon/nodejs-mvc-production
@@ -77,33 +89,50 @@ router.post('/category', (req, res, next) => {
 
 
 
-/*
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // GETTING SINGLE CATEGORY
-router.get('/category/:id', (req, res, next)=>{
+router.get('/:id', (req, res, next) => {
+  console.log("ID: " + req.body.id);
   Category.findById(req.params.id)
-  .select('name _id')
-  .exec()
-  .then(docs=>{
-    console.log(docs);
-    if(docs){
-      res.status(200).json({
-        name: docs.name,
-        id: docs._id,
-        request: {
-          type: "GET",
-          url: 'http://localhost:4000/admin/category/' + docs._id
-        }
-      });
-    }
-  })
-  .catch(err => {
-    console.log(`Error to create category: ${err}`);
-  });
+    .select('name _id')
+    .exec()
+    .then(docs => {
+      console.log(docs);
+      if (docs) {
+        res.status(200).json({
+          name: docs.name,
+          id: docs._id,
+          request: {
+            type: "GET",
+            url: 'http://localhost:4000/admin/category/' + docs._id
+          }
+        });
+      }
+    })
+    .catch(err => {
+      console.log(`Error to read category: ${err}`);
+    });
 
 });
 
 
-
+/*
 
 
 
@@ -113,7 +142,7 @@ router.get('/category/:id', (req, res, next)=>{
 
 
 // UPDATING POST CATEGORY
-router.put('/category/:id', (req, res, next) => {
+router.put('/:id', (req, res, next) => {
   console.log(req.params.id);
   const id = req.params.id;
   Category.updateOne({ _id: id }, {
@@ -149,11 +178,11 @@ router.put('/category/:id', (req, res, next) => {
 
 
 // DELETE CATEGORY
-router.delete('/category/:id', (req, res, next)=>{
-  let id= req.params.id;
-  Category.findByIdAndDelete({_id: id})
+router.delete('/:id', (req, res, next) => {
+  let id = req.params.id;
+  Category.findByIdAndDelete({ _id: id })
     .exec()
-    .then(docs=>{
+    .then(docs => {
       console.log(docs);
       res.status(200).json({
         message: "deleted successfully",
@@ -161,7 +190,7 @@ router.delete('/category/:id', (req, res, next)=>{
         id,
         request: {
           type: "GET",
-          url: 'http://localhost:4000/admin/category/'+id
+          url: 'http://localhost:4000/admin/category/' + id
         }
       })
     })

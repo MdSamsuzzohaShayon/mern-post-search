@@ -12,13 +12,17 @@ const postSchema = new Schema({
         type: String,
         required: true,
     },
+    img_src: {
+        type: String,
+        required: true
+    },
     category:{
         type: Schema.Types.ObjectId,
         required: true,
         ref: 'category'
     },
     tags: {
-        type: String,
+        type: [String],
         required: true,
     }
 });

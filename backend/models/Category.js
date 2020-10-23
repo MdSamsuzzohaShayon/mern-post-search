@@ -21,7 +21,7 @@ categorySchema.pre('remove',(next)=>{
         if(err){
             next(err);
         }else if(post.length > 0){
-            next(new Error("this author post still"));
+            next(new Error("this category post still"));
         }else{
             next();
         }
